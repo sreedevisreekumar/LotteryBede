@@ -27,7 +27,7 @@ namespace LotteryGame
                 var displayService = serviceProvider.GetRequiredService<IDisplayService>();
 
                 Console.WriteLine("Welcome to the Bede Lottery, Player1!");
-                const decimal TicketPrice = 1.00M;  // Use constant for ticket price
+                const decimal TicketPrice = 2.00M;  // Use constant for ticket price
                 decimal startingBalance = 10.00M;
 
                 Console.WriteLine($"Your digital balance: ${startingBalance}");
@@ -59,14 +59,14 @@ namespace LotteryGame
                         if (initial)
                         {
                             // Initialize game
-                            Player player1 = playerService.CreateHumanPlayer(number, startingBalance);
-                            gameService.SetGame(player1, numberOfCPUPlayers);
+                            Player player1 = playerService.CreateHumanPlayer(number, startingBalance,TicketPrice);
+                            gameService.SetGame(player1, numberOfCPUPlayers,TicketPrice);
                         }
                         else
                         {
                             //reset game
-                            Player player1 = playerService.ResetHumanPlayer(number);
-                            gameService.ResetGame(player1);
+                            Player player1 = playerService.ResetHumanPlayer(number,TicketPrice);
+                            gameService.ResetGame(player1,TicketPrice);
                         }
 
                         // Play the game

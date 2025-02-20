@@ -14,18 +14,18 @@ namespace BusinessLogic.Services
         {
             game = gameInstance ?? throw new ArgumentNullException(nameof(gameInstance));
         }
-        public Player CreateHumanPlayer(int numberOfTickets, decimal maxamount)
+        public Player CreateHumanPlayer(int numberOfTickets, decimal maxamount,decimal cost)
         {
             Console.WriteLine($"Player 1 with {numberOfTickets}");
             Player player1 = new Player();
             player1.PlayerId = 1;
             player1.Name = "Player" + player1.PlayerId;
             player1.Balance = maxamount;
-            if (numberOfTickets <= player1.Balance)
+            if (numberOfTickets*cost <= player1.Balance)
             {
                 player1.NumberOfTickets = numberOfTickets;
-                player1.Tickets = SetTicketsForPlayer(player1, numberOfTickets);
-                player1.Balance = player1.Balance - numberOfTickets;
+                player1.Tickets = SetTicketsForPlayer(player1, numberOfTickets,cost);
+                player1.Balance = player1.Balance - (numberOfTickets*cost);
 
             }
             else
@@ -35,28 +35,29 @@ namespace BusinessLogic.Services
             game.Players.Add(player1);
             return player1;
         }
-        public List<Ticket> SetTicketsForPlayer(Player player, int numberOfTickets)
+        public List<Ticket> SetTicketsForPlayer(Player player, int numberOfTickets,decimal cost)
         {
             List<Ticket> tickets = game?.Tickets;
-            tickets = GenerateTickets(numberOfTickets, player);
+            tickets = GenerateTickets(numberOfTickets, player,cost);
             return tickets;
         }
-        static List<Ticket> GenerateTickets(int count, Player player)
+        static List<Ticket> GenerateTickets(int count, Player player, decimal cost)
         {
             List<Ticket> objectList = new List<Ticket>();
 
             for (int i = 0; i < count; i++)
             {
-                objectList.Add(new Ticket { TicketId = Guid.NewGuid(), Name = $"Ticket_{player.PlayerId}_{i}", PlayerId = player.PlayerId, Cost = 1 });
+                objectList.Add(new Ticket { TicketId = Guid.NewGuid(), Name = $"Ticket_{player.PlayerId}_{i}", PlayerId = player.PlayerId, Cost = cost });
             }
 
             return objectList;
         }
-        public List<Player> CreateCPUPlayers(int numberOfPlayers)
+        public List<Player> CreateCPUPlayers(int numberOfPlayers,decimal cost)
         {
-            return GeneratePlayers(2, numberOfPlayers);
+           
+            return GeneratePlayers(2, numberOfPlayers,cost);
         }
-        public List<Player> GeneratePlayers(int startId, int count)
+        public List<Player> GeneratePlayers(int startId, int count,decimal cost)
         {
             List<Player> objectList = new List<Player>();
 
@@ -67,8 +68,8 @@ namespace BusinessLogic.Services
                 if (player1.Balance > 0)
                 {
                     int randomNumber = random.Next(1, (int)player1.Balance);
-                    player1.Tickets = SetTicketsForPlayer(player1, randomNumber);
-                    player1.Balance -= randomNumber;
+                    player1.Tickets = SetTicketsForPlayer(player1, randomNumber,cost);
+                    player1.Balance -= randomNumber*cost;
                     player1.NumberOfTickets = player1.Tickets.Count;
                 }
 
@@ -77,15 +78,15 @@ namespace BusinessLogic.Services
 
             return objectList;
         }
-        public Player ResetHumanPlayer(int number)
+        public Player ResetHumanPlayer(int number,decimal cost)
         {
             Player player1 = game.Players.FirstOrDefault(x => x.PlayerId == 1);
 
             if (number <= player1.Balance)
             {
                 player1.NumberOfTickets = number;
-                player1.Tickets = SetTicketsForPlayer(player1, number);
-                player1.Balance = player1.Balance - number;
+                player1.Tickets = SetTicketsForPlayer(player1, number,cost);
+                player1.Balance = player1.Balance - (number*cost);
 
             }
             else

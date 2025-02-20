@@ -19,14 +19,14 @@ namespace BusinessLogic.Services
             _playerService = playerService ?? throw new ArgumentNullException(nameof(playerService));
         }      
        
-        public void SetGame(Player player1, int numberOfPlayers)
+        public void SetGame(Player player1, int numberOfPlayers, decimal cost)
         {
             
             game.GameId = Guid.NewGuid().ToString();
             game.NumberOfPlayers = numberOfPlayers + 1;
             if (game.Players != null)
             {
-                game.Players.AddRange(_playerService.CreateCPUPlayers(numberOfPlayers));
+                game.Players.AddRange(_playerService.CreateCPUPlayers(numberOfPlayers,cost));
             }
             game.NumberOfTickets = 0;
             game.Tickets = new List<Ticket>();
@@ -35,7 +35,7 @@ namespace BusinessLogic.Services
                 game.NumberOfTickets += player.NumberOfTickets;
                 game.Tickets.AddRange(player.Tickets);
             }
-            game.TotalAmount = game.NumberOfTickets;
+            game.TotalAmount = game.NumberOfTickets *cost;
             SetPrizes();
            
         }
@@ -123,7 +123,7 @@ namespace BusinessLogic.Services
             return itemsWithoutPrize.Take(Math.Min(numberOfItemsToPick, itemsWithoutPrize.Count)).ToList();
         }
        
-        public void ResetGame(Player player1)
+        public void ResetGame(Player player1,decimal cost)
         {
           
             game.NumberOfTickets = 0;
@@ -137,8 +137,8 @@ namespace BusinessLogic.Services
                     if (player.Balance > 0)
                     {
                         int randomNumber = random.Next(1, (int)player.Balance);
-                        player.Tickets = _playerService.SetTicketsForPlayer(player, randomNumber);
-                        player.Balance -= randomNumber;
+                        player.Tickets = _playerService.SetTicketsForPlayer(player, randomNumber,cost);
+                        player.Balance -= randomNumber*cost;
                         player.NumberOfTickets = player.Tickets.Count;
                     }                  
                 }

@@ -51,16 +51,7 @@ namespace BusinessLogic.Services
             Console.WriteLine($"Total Revenue : ${game.TotalAmount}");
 
             Console.WriteLine("=================================");
-            string gameString = JsonConvert.SerializeObject(game, Formatting.Indented);
-            long timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            // Example: 1708251045
-
-
-            string filePath = $"output_{timestamp}.json"; // File path
-
-            File.WriteAllText(filePath, gameString);
-
-            Console.WriteLine("JSON file written successfully!");
+           
         }
         private void DisplayTiers(int prizeTier, decimal netAmount, decimal tierAmount)
         {

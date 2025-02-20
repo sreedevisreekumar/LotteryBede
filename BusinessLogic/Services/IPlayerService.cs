@@ -7,9 +7,9 @@ namespace BusinessLogic.Services
 {
    public interface IPlayerService
     {
-        Player CreateHumanPlayer(int numberOfTickets, decimal maxamount);
-        List<Ticket> SetTicketsForPlayer(Player player, int numberOfTickets);
-        Player ResetHumanPlayer(int number);
-        List<Player> CreateCPUPlayers(int numberOfPlayers);
+        Player CreateHumanPlayer(int numberOfTickets, decimal maxamount,decimal cost);
+        List<Ticket> SetTicketsForPlayer(Player player, int numberOfTickets,decimal cost);
+        Player ResetHumanPlayer(int number,decimal cost);
+        List<Player> CreateCPUPlayers(int numberOfPlayers,decimal cost);
     }
 }
