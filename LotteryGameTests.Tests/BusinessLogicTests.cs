@@ -21,14 +21,14 @@ namespace LotteryGameTests.Tests
             _gameService = new GameService(_game,_playerService);
         }
         [Fact]
-        public void CreatePlayer1_ShouldCreatePlayerWithCorrectTicketsAndBalance()
+        public void CreateHumanPlayer_ShouldCreatePlayerWithCorrectTicketsAndBalance()
         {
             // Arrange
             int numberOfTickets = 5;
             decimal initialBalance = 10.00M;
 
             // Act
-            var player = _playerService.CreatePlayer1(numberOfTickets, initialBalance);
+            var player = _playerService.CreateHumanPlayer(numberOfTickets, initialBalance);
 
             // Assert
             Assert.NotNull(player);
@@ -39,14 +39,14 @@ namespace LotteryGameTests.Tests
         }
 
         [Fact]
-        public void CreatePlayer1_ShouldNotCreatePlayerIfBalanceIsLow()
+        public void CreateHumanPlayer_ShouldNotCreatePlayerIfBalanceIsLow()
         {
             // Arrange
             int numberOfTickets = 15; // More than balance
             decimal initialBalance = 10.00M;
 
             // Act
-            var player = _playerService.CreatePlayer1(numberOfTickets, initialBalance);
+            var player = _playerService.CreateHumanPlayer(numberOfTickets, initialBalance);
 
             // Assert
             Assert.NotNull(player);
@@ -75,7 +75,7 @@ namespace LotteryGameTests.Tests
             int numberOfTickets = 5;
             decimal initialBalance = 10.00M;
             int cpuPlayers = 3;
-            var player1 = _playerService.CreatePlayer1(numberOfTickets, initialBalance);
+            var player1 = _playerService.CreateHumanPlayer(numberOfTickets, initialBalance);
 
             // Act
             _gameService.SetGame(player1, cpuPlayers);
@@ -111,7 +111,7 @@ namespace LotteryGameTests.Tests
             _game.NumberOfTickets = 100;
             _gameService.SetPrizes();
 
-            var player1 = _playerService.CreatePlayer1(5, 10.00M);
+            var player1 = _playerService.CreateHumanPlayer(5, 10.00M);
             _gameService.SetGame(player1, 3);
 
             // Act
@@ -126,7 +126,7 @@ namespace LotteryGameTests.Tests
         public void ResetGame_ShouldClearTicketsAndRetainPlayers()
         {
             // Arrange
-            var player1 = _playerService.CreatePlayer1(5, 10.00M);
+            var player1 = _playerService.CreateHumanPlayer(5, 10.00M);
             _gameService.SetGame(player1, 3);
 
             // Act
@@ -139,14 +139,14 @@ namespace LotteryGameTests.Tests
         }
 
         [Fact]
-        public void ResetPlayer1_ShouldUpdateTicketCountAndBalance()
+        public void ResetHumanPlayer_ShouldUpdateTicketCountAndBalance()
         {
             // Arrange
-            var player1 = _playerService.CreatePlayer1(5, 10.00M);
+            var player1 = _playerService.CreateHumanPlayer(5, 10.00M);
             _gameService.SetGame(player1, 3);
 
             // Act
-            var updatedPlayer = _playerService.ResetPlayer1(3);
+            var updatedPlayer = _playerService.ResetHumanPlayer(3);
 
             // Assert
             Assert.Equal(3, updatedPlayer.NumberOfTickets);
@@ -161,7 +161,7 @@ namespace LotteryGameTests.Tests
             _game.NumberOfTickets = 100;
             _gameService.SetPrizes();
 
-            var player1 = _playerService.CreatePlayer1(5, 10.00M);
+            var player1 = _playerService.CreateHumanPlayer(5, 10.00M);
             _gameService.SetGame(player1, 3);
             _gameService.PlayGame();
 

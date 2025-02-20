@@ -14,7 +14,7 @@ namespace BusinessLogic.Services
         {
             game = gameInstance ?? throw new ArgumentNullException(nameof(gameInstance));
         }
-        public Player CreatePlayer1(int numberOfTickets, decimal maxamount)
+        public Player CreateHumanPlayer(int numberOfTickets, decimal maxamount)
         {
             Console.WriteLine($"Player 1 with {numberOfTickets}");
             Player player1 = new Player();
@@ -77,7 +77,7 @@ namespace BusinessLogic.Services
 
             return objectList;
         }
-        public Player ResetPlayer1(int number)
+        public Player ResetHumanPlayer(int number)
         {
             Player player1 = game.Players.FirstOrDefault(x => x.PlayerId == 1);
 

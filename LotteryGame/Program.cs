@@ -59,13 +59,13 @@ namespace LotteryGame
                         if (initial)
                         {
                             // Initialize game
-                            Player player1 = playerService.CreatePlayer1(number, startingBalance);
+                            Player player1 = playerService.CreateHumanPlayer(number, startingBalance);
                             gameService.SetGame(player1, numberOfCPUPlayers);
                         }
                         else
                         {
                             //reset game
-                            Player player1 = playerService.ResetPlayer1(number);
+                            Player player1 = playerService.ResetHumanPlayer(number);
                             gameService.ResetGame(player1);
                         }
 
