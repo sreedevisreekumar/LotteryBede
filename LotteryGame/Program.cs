@@ -17,21 +17,25 @@ namespace LotteryGame
                 var serviceProvider = new ServiceCollection()
                     .AddSingleton<Game>()
                     .AddSingleton<IGameService, GameService>()
+                    .AddSingleton<IPlayerService,PlayerService>()
+                    .AddSingleton<IDisplayService, DisplayService>()
                     .BuildServiceProvider();
 
                 // Resolve the service
                 var gameService = serviceProvider.GetRequiredService<IGameService>();
+                var playerService= serviceProvider.GetRequiredService<IPlayerService>();
+                var displayService = serviceProvider.GetRequiredService<IDisplayService>();
 
                 Console.WriteLine("Welcome to the Bede Lottery, Player1!");
-                const decimal TicketPrice = 1.00M;  // Use constant for ticket price
+                const decimal TicketPrice = 2.00M;  // Use constant for ticket price
                 decimal startingBalance = 10.00M;
 
                 Console.WriteLine($"Your digital balance: ${startingBalance}");
                 Console.WriteLine($"Ticket price: ${TicketPrice} each");
 
                 string userInput = "y";
-                Random random = new Random(); // Move outside loop
-                bool initial = true;
+                Random random = new Random(); 
+                bool initial = true;// set for the first run
 
                 while (userInput == "y")
                 {
@@ -55,21 +59,21 @@ namespace LotteryGame
                         if (initial)
                         {
                             // Initialize game
-                            Player player1 = gameService.CreatePlayer1(number, startingBalance);
-                            gameService.SetGame(player1, numberOfCPUPlayers);
+                            Player player1 = playerService.CreateHumanPlayer(number, startingBalance,TicketPrice);
+                            gameService.SetGame(player1, numberOfCPUPlayers,TicketPrice);
                         }
                         else
                         {
                             //reset game
-                            Player player1 = gameService.ResetPlayer1(number);
-                            gameService.ResetGame(player1);
+                            Player player1 = playerService.ResetHumanPlayer(number,TicketPrice);
+                            gameService.ResetGame(player1,TicketPrice);
                         }
 
                         // Play the game
                         gameService.PlayGame();
 
                         // Display results
-                        gameService.DisplayResults();
+                        displayService.DisplayResults();
                         // Deduct ticket cost
                         startingBalance -= number * TicketPrice;
                         //Reset tickets

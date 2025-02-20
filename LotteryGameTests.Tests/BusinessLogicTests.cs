@@ -11,22 +11,25 @@ namespace LotteryGameTests.Tests
     public class BusinessLogicTests
     {
         private readonly GameService _gameService;
+        private readonly PlayerService _playerService;
         private readonly Game _game;
 
         public BusinessLogicTests()
         {
             _game = new Game();
-            _gameService = new GameService(_game);
+            _playerService = new PlayerService(_game);
+            _gameService = new GameService(_game,_playerService);
         }
         [Fact]
-        public void CreatePlayer1_ShouldCreatePlayerWithCorrectTicketsAndBalance()
+        public void CreateHumanPlayer_ShouldCreatePlayerWithCorrectTicketsAndBalance()
         {
             // Arrange
             int numberOfTickets = 5;
             decimal initialBalance = 10.00M;
+            decimal cost = 1.00M;
 
             // Act
-            var player = _gameService.CreatePlayer1(numberOfTickets, initialBalance);
+            var player = _playerService.CreateHumanPlayer(numberOfTickets, initialBalance,cost);
 
             // Assert
             Assert.NotNull(player);
@@ -37,14 +40,15 @@ namespace LotteryGameTests.Tests
         }
 
         [Fact]
-        public void CreatePlayer1_ShouldNotCreatePlayerIfBalanceIsLow()
+        public void CreateHumanPlayer_ShouldNotCreatePlayerIfBalanceIsLow()
         {
             // Arrange
             int numberOfTickets = 15; // More than balance
             decimal initialBalance = 10.00M;
+            decimal cost = 1.00M;
 
             // Act
-            var player = _gameService.CreatePlayer1(numberOfTickets, initialBalance);
+            var player = _playerService.CreateHumanPlayer(numberOfTickets, initialBalance,cost);
 
             // Assert
             Assert.NotNull(player);
@@ -59,7 +63,7 @@ namespace LotteryGameTests.Tests
             int numberOfPlayers = 3;
 
             // Act
-            var players = _gameService.CreateCPUPlayers(numberOfPlayers);
+            var players = _playerService.CreateCPUPlayers(numberOfPlayers,1.00M);
 
             // Assert
             Assert.Equal(numberOfPlayers, players.Count);
@@ -73,10 +77,10 @@ namespace LotteryGameTests.Tests
             int numberOfTickets = 5;
             decimal initialBalance = 10.00M;
             int cpuPlayers = 3;
-            var player1 = _gameService.CreatePlayer1(numberOfTickets, initialBalance);
+            var player1 = _playerService.CreateHumanPlayer(numberOfTickets, initialBalance,1.00M);
 
             // Act
-            _gameService.SetGame(player1, cpuPlayers);
+            _gameService.SetGame(player1, cpuPlayers,1.00M);
 
             // Assert
             Assert.Equal(cpuPlayers + 1, _game.NumberOfPlayers); // Player1 + CPU Players
@@ -109,8 +113,8 @@ namespace LotteryGameTests.Tests
             _game.NumberOfTickets = 100;
             _gameService.SetPrizes();
 
-            var player1 = _gameService.CreatePlayer1(5, 10.00M);
-            _gameService.SetGame(player1, 3);
+            var player1 = _playerService.CreateHumanPlayer(5, 10.00M,1.00M);
+            _gameService.SetGame(player1, 3,1.00M);
 
             // Act
             _gameService.PlayGame();
@@ -124,11 +128,11 @@ namespace LotteryGameTests.Tests
         public void ResetGame_ShouldClearTicketsAndRetainPlayers()
         {
             // Arrange
-            var player1 = _gameService.CreatePlayer1(5, 10.00M);
-            _gameService.SetGame(player1, 3);
+            var player1 = _playerService.CreateHumanPlayer(5, 10.00M,1.00M);
+            _gameService.SetGame(player1, 3,1.00M);
 
             // Act
-            _gameService.ResetGame(player1);
+            _gameService.ResetGame(player1,1.00M);
 
             // Assert
             Assert.True(_game.Tickets.Count > 0);
@@ -137,14 +141,14 @@ namespace LotteryGameTests.Tests
         }
 
         [Fact]
-        public void ResetPlayer1_ShouldUpdateTicketCountAndBalance()
+        public void ResetHumanPlayer_ShouldUpdateTicketCountAndBalance()
         {
             // Arrange
-            var player1 = _gameService.CreatePlayer1(5, 10.00M);
-            _gameService.SetGame(player1, 3);
+            var player1 = _playerService.CreateHumanPlayer(5, 10.00M,1.00M);
+            _gameService.SetGame(player1, 3,1.00M);
 
             // Act
-            var updatedPlayer = _gameService.ResetPlayer1(3);
+            var updatedPlayer = _playerService.ResetHumanPlayer(3,1.00M);
 
             // Assert
             Assert.Equal(3, updatedPlayer.NumberOfTickets);
@@ -159,8 +163,8 @@ namespace LotteryGameTests.Tests
             _game.NumberOfTickets = 100;
             _gameService.SetPrizes();
 
-            var player1 = _gameService.CreatePlayer1(5, 10.00M);
-            _gameService.SetGame(player1, 3);
+            var player1 = _playerService.CreateHumanPlayer(5, 10.00M,1.00M);
+            _gameService.SetGame(player1, 3,1.00M);
             _gameService.PlayGame();
 
             // Act
@@ -178,7 +182,7 @@ namespace LotteryGameTests.Tests
         public void CreateCPUPlayers_ShouldCreateSpecifiedNumberOfPlayers(int numberOfPlayers)
         {
             // Act
-            List<Player> players = _gameService.CreateCPUPlayers(numberOfPlayers);
+            List<Player> players = _playerService.CreateCPUPlayers(numberOfPlayers,1.00M);
 
             // Assert
             Assert.NotNull(players);
@@ -202,7 +206,7 @@ namespace LotteryGameTests.Tests
             Player player = new Player { PlayerId = 1, Name = "TestPlayer", Balance = 10.00M };
 
             // Act
-            List<Ticket> tickets = _gameService.SetTicketsForPlayer(player, numberOfTickets);
+            List<Ticket> tickets = _playerService.SetTicketsForPlayer(player, numberOfTickets,1.00M);
 
             // Assert
             Assert.NotNull(tickets);
@@ -226,7 +230,7 @@ namespace LotteryGameTests.Tests
             int count = 3;
 
             // Act
-            List<Player> players = _gameService.GeneratePlayers(startId, count);
+            List<Player> players = _playerService.GeneratePlayers(startId, count,1.00M);
 
             // Assert
             Assert.All(players, player =>
