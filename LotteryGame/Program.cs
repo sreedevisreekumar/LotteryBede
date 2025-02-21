@@ -61,6 +61,13 @@ namespace LotteryGame
                         {
                             logger.LogWarning("Insufficient balance. Player attempted to buy {number} ticket(s) but has only ${startingBalance}.", number, startingBalance);
                             Console.WriteLine("Insufficient balance! Try a lower number of tickets.");
+                            Console.WriteLine("Do you want to continue? (y/n): ");
+                            userInput = Console.ReadLine()?.Trim().ToLower();
+
+                            if (userInput != "y" && userInput != "n")
+                            {
+                                Console.WriteLine("Invalid input! Please enter 'y' for Yes or 'n' for No.");
+                            }
                             continue;
                         }
 
