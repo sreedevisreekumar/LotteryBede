@@ -29,7 +29,7 @@ Implements Dependency Injection (DI) for modular architecture.
 Implements logging for game actions and errors.
 Cost of ticket can be configurable as a constant in the program.cs
 
-#Readability
+# Readability
 1. Code is well stuctured with formatting,comments
 2.Logically grouped into classes, interfaces,services
 3.Sufficient comments and meaninfful naming conventions
@@ -41,7 +41,7 @@ Cost of ticket can be configurable as a constant in the program.cs
 	I myself started with a single game mode and it was not difficult to incorporate multiple rounds of play and cumulative calculation as the classes were correctly specified.
 2.Player can be allowed to increase their balance, pricing criteria can be changed
 3.Dattabase integration can be added later easily
-#Configurability
+# Configurability
 1.As criteria like number of players, number of tickets, cost are already configurable other things like prize criteria can be added easily.
 
 ## Technologies Used
