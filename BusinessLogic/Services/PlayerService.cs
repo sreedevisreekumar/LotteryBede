@@ -10,6 +10,7 @@ namespace BusinessLogic.Services
     {
         private readonly Game game;
         private static readonly Random random = new Random();
+       
         public PlayerService(Game gameInstance)
         {
             game = gameInstance ?? throw new ArgumentNullException(nameof(gameInstance));
@@ -41,13 +42,27 @@ namespace BusinessLogic.Services
             tickets = GenerateTickets(numberOfTickets, player,cost);
             return tickets;
         }
+        
+
         static List<Ticket> GenerateTickets(int count, Player player, decimal cost)
         {
             List<Ticket> objectList = new List<Ticket>();
+            long timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            int lastFourDigits = (int)(timestamp % 10000);
+            Random random = new Random();
 
             for (int i = 0; i < count; i++)
             {
-                objectList.Add(new Ticket { TicketId = Guid.NewGuid(), Name = $"Ticket_{player.PlayerId}_{i}", PlayerId = player.PlayerId, Cost = cost });
+                int randomSuffix = random.Next(1000, 9999); // 4-digit random number
+                long uniqueTicketNumber = long.Parse($"{lastFourDigits}{randomSuffix}");
+
+                objectList.Add(new Ticket
+                {
+                    TicketId = Guid.NewGuid(), // Unique Ticket ID
+                    Name = uniqueTicketNumber.ToString(),
+                    PlayerId = player.PlayerId,
+                    Cost = cost
+                });
             }
 
             return objectList;

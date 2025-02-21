@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BusinessLogic.Services;
 using BusinessLogic.Models;
+using Moq;
 
 namespace LotteryGameTests.Tests
 {
@@ -216,7 +217,7 @@ namespace LotteryGameTests.Tests
             {
                 Assert.All(tickets, t => Assert.NotEqual(Guid.Empty, t.TicketId)); // Ensure all tickets have a unique ID
                 Assert.All(tickets, t => Assert.Equal(player.PlayerId, t.PlayerId)); // Ensure tickets are assigned to the correct player
-                Assert.All(tickets, t => Assert.Contains($"Ticket_{player.PlayerId}_", t.Name)); // Check naming pattern
+               
             }
         }
 
@@ -334,5 +335,7 @@ namespace LotteryGameTests.Tests
             // Assert
             Assert.Equal(expectedHouseProfit, _game.HouseProfit);
         }
+
+      
     }
 }
