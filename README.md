@@ -12,7 +12,9 @@ A simple console-based lottery simulation built in **C# .NET Core** demonstratin
 
 Players can buy 1 to 10 tickets per round(configurable).
 
+
 Game initializes with a human player and random number of CPU players (10-15).(configurable)
+
 
 A ticket draw determines the winners for different prize tiers.
 
