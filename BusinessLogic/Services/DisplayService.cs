@@ -1,23 +1,27 @@
 ﻿using BusinessLogic.Models;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace BusinessLogic.Services
 {
     public class DisplayService : IDisplayService
     {
         private readonly Game game;
-        private static readonly Random random = new Random();
+     
+
         public DisplayService(Game gameInstance)
         {
             game = gameInstance ?? throw new ArgumentNullException(nameof(gameInstance));
+          
         }
+
         public void DisplayResults()
         {
+      
+
             Console.WriteLine("Players with number of tickets");
             Console.WriteLine("=================================");
             foreach (var player1 in game.Players)
@@ -34,26 +38,39 @@ namespace BusinessLogic.Services
             if (ticket1 != null)
             {
                 Player playerG = game.Players.FirstOrDefault(x => x.PlayerId == ticket1.PlayerId);
-                Console.WriteLine($"GrandPrize : Player: {playerG.PlayerId} wins ${game.NetGrandPrize}!");
+                if (playerG != null)
+                {
+                    Console.WriteLine($"Grand Prize: Player: {playerG.PlayerId} wins ${game.NetGrandPrize} for ticket {ticket1.Name}!");
+                   
+                }
             }
             else
             {
                 Console.WriteLine("No Grand Prize winner.");
+               
             }
 
-            DisplayTiers(2, game.NetSecondTier, game.SecondTierAmount);
-            DisplayTiers(3, game.NetThirdTier, game.ThirdTierAmount);
+            DisplayTiers(2, game.NetSecondTier);
+            DisplayTiers(3, game.NetThirdTier);
+            Console.WriteLine("=================================");
 
             Console.WriteLine("Congratulations to the winners!");
-
-            Console.WriteLine($"House Revenue : ${game.HouseProfit}");
-
-            Console.WriteLine($"Total Revenue : ${game.TotalAmount}");
-
+            Console.WriteLine($"House Revenue: ${game.HouseProfit}");
+            Console.WriteLine($"Total Revenue: ${game.TotalAmount}");
             Console.WriteLine("=================================");
-           
+
+            Console.WriteLine("Cumulative Results!");
+            Console.WriteLine($"Cumulative House Revenue: ${game.CumulativeHouseProfit}");
+            Console.WriteLine($"Cumulative Revenue: ${game.CumulativeRevenue}");
+
+            Player playerHuman = game.Players.FirstOrDefault(x => x.PlayerId == 1);
+            Console.WriteLine($"You won: ${playerHuman?.AmountWon ?? 0}!!!");
+            Console.WriteLine("=================================");
+
+          
         }
-        private void DisplayTiers(int prizeTier, decimal netAmount, decimal tierAmount)
+
+        private void DisplayTiers(int prizeTier, decimal netAmount)
         {
             var playerIds = game.Tickets
              .Where(t => t.PrizeTier == prizeTier)
@@ -74,3 +91,4 @@ namespace BusinessLogic.Services
         }
     }
 }
+

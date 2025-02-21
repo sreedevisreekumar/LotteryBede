@@ -14,6 +14,8 @@ namespace BusinessLogic.Models
         public decimal SecondTierAmount { get; set; }
         public decimal ThirdTierAmount { get; set; }
         public decimal HouseProfit { get; set; }
+        public decimal CumulativeHouseProfit { get; set; }
+        public decimal CumulativeRevenue { get; set; }
         public int noOfGrandPrize { get; set; }
         public int noOfSecondTier { get; set; }
         public int noOfThirdTier { get; set; }

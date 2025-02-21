@@ -7,11 +7,13 @@ using BusinessLogic.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Xunit;
+using Microsoft.Extensions.Logging;
 
 namespace LotteryGameTests.Tests
 {
     public class GameTests
     {
+       
         [Fact]
         public void DisplayResults_ShouldOutputCorrectResults()
         {
@@ -45,10 +47,10 @@ namespace LotteryGameTests.Tests
 
             // Assert
             var output = writer.ToString();
-            Assert.Contains("GrandPrize : Player: 1 wins $1000!", output);
+            Assert.Contains("Grand Prize: Player: 1 wins $1000", output);
             Assert.Contains("Players with number of tickets", output);
-            Assert.Contains("Total Revenue : $1950", output);
-            Assert.Contains("House Revenue : $200", output);
+            Assert.Contains("Total Revenue: $1950", output);
+            Assert.Contains("House Revenue: $200", output);
         }
 
         [Fact]
@@ -84,5 +86,8 @@ namespace LotteryGameTests.Tests
             Assert.Equal(4.00M, balanceAfterFirstRound);
             Assert.Equal(0.00M, balanceAfterSecondRound);
         }
+
+       
     }
 }
+

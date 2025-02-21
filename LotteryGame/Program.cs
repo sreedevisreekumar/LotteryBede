@@ -38,6 +38,10 @@ namespace LotteryGame
                 Console.WriteLine("Welcome to the Bede Lottery, Player1!");
                 const decimal TicketPrice = 1.00M;
                 decimal startingBalance = 10.00M;
+                int minNumberOfTickets = 1;
+                int maxNumberOfTickets = 10;
+                int minNumberOfCPUPlayers = 9;
+                int maxNumberOfCPUPlayers = 15;
 
                 Console.WriteLine($"Your digital balance: ${startingBalance}");
                 Console.WriteLine($"Ticket price: ${TicketPrice} each");
@@ -46,26 +50,24 @@ namespace LotteryGame
                 Random random = new Random();
                 bool initial = true; // Set for the first run
 
-                while (userInput == "y")
+                do
                 {
                     Console.WriteLine("How many tickets do you want to buy, Player1?");
                     string input = Console.ReadLine();
 
-                    if (int.TryParse(input, out int number) && number >= 1 && number <= 10)
+                    if (int.TryParse(input, out int number) && number >= minNumberOfTickets && number <= maxNumberOfTickets)
                     {
                         if (startingBalance < number * TicketPrice)
                         {
                             logger.LogWarning("Insufficient balance. Player attempted to buy {number} ticket(s) but has only ${startingBalance}.", number, startingBalance);
                             Console.WriteLine("Insufficient balance! Try a lower number of tickets.");
-                            Console.WriteLine("Do you want to continue? (y/n): ");
-                            userInput = Console.ReadLine()?.Trim().ToLower();
                             continue;
                         }
 
                         logger.LogInformation($"Player chose to buy {number} ticket(s).", number);
 
                         // Set game with random CPU players (9-14)
-                        int numberOfCPUPlayers = random.Next(9, 15);
+                        int numberOfCPUPlayers = random.Next(minNumberOfCPUPlayers, maxNumberOfCPUPlayers);
                         if (initial)
                         {
                             logger.LogInformation($"Initializing new game with {numberOfCPUPlayers} CPU players.", numberOfCPUPlayers);
@@ -91,17 +93,26 @@ namespace LotteryGame
 
                         // Reset tickets
                         initial = false;
-                        Console.WriteLine($"Remaining balance: ${startingBalance}");
                     }
                     else
                     {
                         logger.LogWarning("Invalid input detected for ticket purchase.");
-                        Console.WriteLine("Invalid input! Please enter a number between 1 and 10.");
+                        Console.WriteLine($"Invalid input! Please enter a number between {minNumberOfTickets} and {maxNumberOfTickets}.");
                     }
 
-                    Console.WriteLine("Do you want to continue? (y/n): ");
-                    userInput = Console.ReadLine()?.Trim().ToLower();
-                }
+                    // Ensure valid input
+                    do
+                    {
+                        Console.WriteLine("Do you want to continue? (y/n): ");
+                        userInput = Console.ReadLine()?.Trim().ToLower();
+
+                        if (userInput != "y" && userInput != "n")
+                        {
+                            Console.WriteLine("Invalid input! Please enter 'y' for Yes or 'n' for No.");
+                        }
+                    } while (userInput != "y" && userInput != "n");
+
+                } while (userInput == "y");  // Correct exit condition
 
                 logger.LogInformation("Program terminated successfully.");
                 Console.WriteLine("Program terminated.");
